@@ -6,6 +6,14 @@ public class Products {
     public int quantity;
     public float price;
 
+    public Products(String name, int quantity, float price, String type, String image, int id) {
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
+        this.type = type;
+        this.image=image;
+        this.id=id;
+    }
 
 
     public String getImage() {

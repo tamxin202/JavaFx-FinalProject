@@ -4,11 +4,10 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -22,45 +21,63 @@ import java.io.IOException;
 import java.net.SocketOption;
 import java.util.ArrayList;
 import java.util.List;
+
 public class HelloApplication extends Application {
+
+    VBox productRoot = new VBox();
+    TextField tfName = new TextField();
+
+    TextField tfQuantity = new TextField();
+
+    TextField tfPrice = new TextField();
+
+    TextField tfType = new TextField();
+
+    TextField tfImg = new TextField();
+
     @Override
     public void start(Stage stage) throws IOException {
         DBConnection dbConnection = new DBConnection();
         VBox root = new VBox();
-
-        VBox productRoot = new VBox();
         HBox hInsertProduct = new HBox();
-
-        TextField tfName = new TextField();
-        tfName.setPromptText("Name");
-        TextField tfQuantity = new TextField();
-        tfQuantity.setPromptText("Quantity");
-        TextField tfPrice = new TextField();
-        tfPrice.setPromptText("Price");
-        TextField tfType = new TextField();
-        tfType.setPromptText("Type");
-        TextField tfImg = new TextField();
-        tfImg.setPromptText("Link Image");
-
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(root);
-        // scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
 
         Button btnAdd = new Button("Add");
+        tfName.setPromptText("Name");
+        tfQuantity.setPromptText("Quantity");
+        tfPrice.setPromptText("Price");
+        tfType.setPromptText("Type");
+        tfImg.setPromptText("Link Image");
         btnAdd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 dbConnection.insertProduct(new Products(tfName.getText(), Integer.parseInt(tfQuantity.getText()), Float.parseFloat(tfPrice.getText()), tfType.getText(), tfImg.getText()));
+                tfName.clear();
+                tfImg.clear();
+                tfPrice.clear();
+                tfQuantity.clear();
+                tfType.clear();
                 getThenDisplayProducts(productRoot, dbConnection);
             }
         });
-
-
-        hInsertProduct.getChildren().addAll(tfName, tfQuantity, tfPrice,tfType,tfImg, btnAdd);
+        Button btnEdit = new Button("Update");
+        btnEdit.setOnAction(event -> {
+            dbConnection.updateProduct(new Products(tfName.getText(), Integer.parseInt(tfQuantity.getText()), Float.parseFloat(tfPrice.getText()), tfType.getText(),
+                    tfImg.getText(),Integer.parseInt(tfName.getId())));
+            tfName.clear();
+            tfImg.clear();
+            tfPrice.clear();
+            tfQuantity.clear();
+            tfType.clear();
+            getThenDisplayProducts(productRoot, dbConnection);
+        });
+        hInsertProduct.getChildren().addAll(tfName, tfQuantity, tfPrice, tfType, tfImg, btnAdd,btnEdit);
         root.getChildren().addAll(hInsertProduct, productRoot);
         getThenDisplayProducts(productRoot, dbConnection);
-        Scene scene = new Scene(root, 900, 700);
+        Scene scene = new Scene(scrollPane, 900, 700);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
@@ -91,7 +108,7 @@ public class HelloApplication extends Application {
 
             Label lbImg = new Label(products.get(i).image);
             Label lbPrice = new Label("" + products.get(i).price);
-
+            //Delete
             Button btnDelete = new Button("Delete");
             btnDelete.setOnAction(actionEvent -> {
                 System.out.println("Click delete " + products.get(finialI).id);
@@ -99,20 +116,19 @@ public class HelloApplication extends Application {
                 getThenDisplayProducts(root, dbConnection);
             });
 
+            // Update
             Button btnUpdate = new Button("Update");
             btnUpdate.setOnAction(actionEvent -> {
-                lbName.setText(String.valueOf((products.get(finialI).name)));
-                lbQuan.setText(String.valueOf((products.get(finialI).quantity)));
-                lbPrice.setText(String.valueOf((products.get(finialI).price)));
-                lbType.setText(String.valueOf((products.get(finialI).type)));
-                lbImg.setText(String.valueOf((products.get(finialI).image)));
-
+                tfName.setText(String.valueOf((products.get(finialI).name)));
+                tfName.setId("" + products.get(finialI).id);
+                tfQuantity.setText(String.valueOf((products.get(finialI).quantity)));
+                tfPrice.setText(String.valueOf((products.get(finialI).price)));
+                tfType.setText(String.valueOf((products.get(finialI).type)));
+                tfImg.setText(String.valueOf((products.get(finialI).image)));
 
             });
-
-
             productsBox.setSpacing(50);
-            productsBox.getChildren().addAll(lbId, lbName, lbQuan, lbPrice,lbType, imageView, btnDelete, btnUpdate);
+            productsBox.getChildren().addAll(lbId, lbName, lbQuan, lbPrice, lbType, imageView, btnDelete, btnUpdate);
             root.getChildren().add(productsBox);
         }
     }
