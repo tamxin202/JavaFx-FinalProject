@@ -39,13 +39,16 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         DBConnection dbConnection = new DBConnection();
         VBox root = new VBox();
+
         HBox hInsertProduct = new HBox();
 
         ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setStyle("-fx-base:#99CCFF;");
         scrollPane.setContent(root);
 
 
         Button btnAdd = new Button("Add");
+        btnAdd.setStyle("-fx-base:#00FF00;");
         tfName.setPromptText("Name");
         tfQuantity.setPromptText("Quantity");
         tfPrice.setPromptText("Price");
@@ -64,6 +67,7 @@ public class HelloApplication extends Application {
             }
         });
         Button btnEdit = new Button("Update");
+        btnEdit.setStyle("-fx-base:#00FFFF;");
         btnEdit.setOnAction(event -> {
             dbConnection.updateProduct(new Products(tfName.getText(), Integer.parseInt(tfQuantity.getText()), Float.parseFloat(tfPrice.getText()), tfType.getText(),
                     tfImg.getText(),Integer.parseInt(tfName.getId())));
@@ -78,7 +82,7 @@ public class HelloApplication extends Application {
         root.getChildren().addAll(hInsertProduct, productRoot);
         getThenDisplayProducts(productRoot, dbConnection);
         Scene scene = new Scene(scrollPane, 900, 700);
-        stage.setTitle("Hello!");
+        stage.setTitle("Welcome to XinXin Shoes Store!");
         stage.setScene(scene);
         stage.show();
     }
@@ -110,6 +114,7 @@ public class HelloApplication extends Application {
             Label lbPrice = new Label("" + products.get(i).price);
             //Delete
             Button btnDelete = new Button("Delete");
+            btnDelete.setStyle("-fx-base:#FF0000;");
             btnDelete.setOnAction(actionEvent -> {
                 System.out.println("Click delete " + products.get(finialI).id);
                 dbConnection.deleteProduct(products.get(finialI).id);
@@ -118,6 +123,7 @@ public class HelloApplication extends Application {
 
             // Update
             Button btnUpdate = new Button("Update");
+            btnUpdate.setStyle("-fx-base:#FFFF00;");
             btnUpdate.setOnAction(actionEvent -> {
                 tfName.setText(String.valueOf((products.get(finialI).name)));
                 tfName.setId("" + products.get(finialI).id);
@@ -128,12 +134,14 @@ public class HelloApplication extends Application {
 
             });
             productsBox.setSpacing(50);
+
             productsBox.getChildren().addAll(lbId, lbName, lbQuan, lbPrice, lbType, imageView, btnDelete, btnUpdate);
             root.getChildren().add(productsBox);
         }
     }
 
     private void getThenDisplayProducts(VBox root, DBConnection dbConnection) {
+
         List<Products> products = dbConnection.getProducts();
         displayProducts(dbConnection, root, products);
     }
