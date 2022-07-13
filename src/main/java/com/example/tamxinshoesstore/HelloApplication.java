@@ -97,12 +97,12 @@ public class HelloApplication extends Application {
             Label lbName = new Label(products.get(i).name);
             Label lbType = new Label(products.get(i).type);
             Label lbQuan = new Label("" + products.get(i).quantity);
-
+            lbName.setMinWidth(100);
             Image image = new Image(products.get(i).image);
             ImageView imageView = new ImageView(image);
             //Setting the position of the image
             imageView.setX(50);
-            imageView.setY(25);
+            imageView.setY(50);
             //setting the fit height and width of the image view
             imageView.setFitHeight(200);
             imageView.setFitWidth(200);
@@ -123,7 +123,7 @@ public class HelloApplication extends Application {
 
             // Update
             Button btnUpdate = new Button("Update");
-            btnUpdate.setStyle("-fx-base:#FFFF00;");
+            btnUpdate.setStyle("-fx-base:#FFCCFF;");
             btnUpdate.setOnAction(actionEvent -> {
                 tfName.setText(String.valueOf((products.get(finialI).name)));
                 tfName.setId("" + products.get(finialI).id);
